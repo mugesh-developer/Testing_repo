@@ -8,6 +8,6 @@
     "build": "echo 'No build step needed'"
   },
   "keywords": ["node", "hello world"],
-  "author": "Your Name",
+  "author": "Mugesh",
   "license": "ISC"
 }
