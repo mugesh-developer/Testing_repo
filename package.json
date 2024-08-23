@@ -1,0 +1,12 @@
+{
+  "name": "hello-world-node",
+  "version": "1.0.0",
+  "description": "A simple Hello World Node.js application without Express",
+  "main": "app.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["node", "hello world"],
+  "author": "Mugesh",
+  "license": "ISC"
+}
