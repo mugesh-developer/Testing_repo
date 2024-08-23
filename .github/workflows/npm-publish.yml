@@ -28,8 +28,21 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
+          # Create SSH directory and add SSH private key
           mkdir -p ~/.ssh
           echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh -o StrictHostKeyChecking=no mugeshthedeveloper@gmail.com "mkdir -p /var/www/myapp"
-          rsync -avz --delete-after ./ mugeshthedeveloper@gmail.com:/var/www/myapp
+
+          # Configure SSH to avoid host key checking
+          echo "Host 192.168.1.100" >> ~/.ssh/config
+          echo "  StrictHostKeyChecking no" >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+
+          # Create the target directory on the server if it does not exist
+          ssh deployuser@192.168.1.100 "mkdir -p /var/www/myapp"
+
+          # Sync the local repository to the target directory on the server
+          rsync -avz --delete-after ./ deployuser@192.168.1.100:/var/www/myapp
+
+          # Restart the server if needed (optional)
+          ssh deployuser@192.168.1.100 "pm2 restart myapp || pm2 start /var/www/myapp/app.js --name 'myapp'"
